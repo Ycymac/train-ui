@@ -36,7 +36,7 @@ jobs:
 
       - name: Build GitHub Pages artifact
         env:
-          VUE_APP_SERVER: ${{ vars.VUE_APP_SERVER || 'http://116.204.46.30:8000' }}
+          VUE_APP_SERVER: https://116.204.46.30
         run: npm run build:pages
 
       - name: Configure GitHub Pages

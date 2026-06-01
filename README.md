@@ -37,4 +37,4 @@ Configure the repository before using Pages with a live backend:
 3. Create `VUE_APP_SERVER` with the HTTPS URL of the deployed gateway.
 4. Allow the origin `https://ycymac.github.io` in the deployed gateway CORS configuration.
 
-The currently verified HTTP gateway URL, `http://116.204.46.30:8000`, is retained as a build fallback. Browsers block HTTP API requests from an HTTPS Pages site, so production Pages API access requires HTTPS to be enabled on the gateway and an HTTPS `VUE_APP_SERVER` repository variable.
+The deployed Pages builds use the HTTPS gateway URL `https://116.204.46.30`. The gateway is exposed through an Nginx reverse proxy on port `443`; the internal gateway port `8000` is not exposed publicly.
