@@ -7,6 +7,8 @@ import 'ant-design-vue/dist/reset.css'
 import * as Icons from '@ant-design/icons-vue'
 import axios from 'axios'
 import './assets/js/enums'
+import '@fontsource-variable/noto-sans-sc'
+import '@fontsource-variable/noto-serif-sc'
 import '../../shared/app-shell.css'
 import {initTheme} from './theme'
 
