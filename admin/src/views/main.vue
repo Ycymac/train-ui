@@ -1,13 +1,15 @@
 <template>
-  <a-layout id="components-layout-demo-top-side-2">
+  <a-layout class="train-shell">
     <header-view></header-view>
-    <a-layout>
+    <a-layout class="train-shell__body">
       <sider-view></sider-view>
-      <a-layout style="padding: 0 24px 24px">
-        <a-layout-content
-            :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
-        >
-          <router-view></router-view>
+      <a-layout class="train-workspace">
+        <a-layout-content class="train-workspace__content">
+          <router-view v-slot="{ Component, route }">
+            <transition name="page">
+              <component :is="Component" :key="route.path"></component>
+            </transition>
+          </router-view>
         </a-layout-content>
       </a-layout>
     </a-layout>
@@ -29,6 +31,3 @@ export default defineComponent({
   },
 });
 </script>
-<style>
-
-</style>

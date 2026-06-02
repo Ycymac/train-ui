@@ -7,15 +7,19 @@ import 'ant-design-vue/dist/reset.css'
 import * as Icons from '@ant-design/icons-vue'
 import axios from 'axios'
 import './assets/js/enums'
+import '../../shared/app-shell.css'
+import {initTheme} from './theme'
 
+initTheme()
 const app = createApp(App)
-app.use(Antd).use(store).use(router).mount('#app')
+app.use(Antd).use(store).use(router)
 
 // 全局使用图标
 const icons = Icons
 for (const icon in icons) {
     app.component(icon, icons[icon])
 }
+app.mount('#app')
 
 /**
  * axios拦截器

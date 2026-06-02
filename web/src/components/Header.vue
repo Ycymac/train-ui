@@ -1,82 +1,55 @@
 <template>
-  <a-layout-header class="header">
-    <div class="logo">
-      <router-link to="/welcome" style="color: white; font-size: 18px">甲蛙12306</router-link>
+  <a-layout-header class="app-header">
+    <router-link class="brand-mark" to="/welcome">
+      <span class="brand-mark__icon"><deployment-unit-outlined /></span>
+      <span>
+        <span class="brand-mark__title">RailFlow</span>
+        <span class="brand-mark__caption">Ticketing Console</span>
+      </span>
+    </router-link>
+
+    <nav class="header-nav" aria-label="快捷导航">
+      <router-link class="header-nav__link" to="/ticket">余票查询</router-link>
+      <router-link class="header-nav__link" to="/passenger">乘车人</router-link>
+      <router-link class="header-nav__link" to="/my-ticket">我的车票</router-link>
+      <router-link class="header-nav__link" to="/seat">座位销售图</router-link>
+    </nav>
+
+    <div class="header-actions">
+      <span class="header-user">当前用户 <strong>{{ memberMobile }}</strong></span>
+      <router-link class="header-logout" to="/login">退出</router-link>
+      <button
+          class="theme-toggle"
+          type="button"
+          :aria-label="theme === 'dark' ? '切换到明亮模式' : '切换到暗黑模式'"
+          @click="toggleTheme"
+      >
+        <svg v-if="theme === 'dark'" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3.5" />
+          <path d="M12 2.5v2M12 19.5v2M4.5 12h-2M21.5 12h-2M5.1 5.1l1.4 1.4M17.5 17.5l1.4 1.4M18.9 5.1l-1.4 1.4M6.5 17.5l-1.4 1.4" />
+        </svg>
+        <svg v-else aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M20.4 15.5A8.1 8.1 0 0 1 8.5 3.6 8.6 8.6 0 1 0 20.4 15.5Z" />
+        </svg>
+      </button>
     </div>
-    <div style="float: right; color: white;">
-      您好，{{ member.mobile }} &nbsp;&nbsp;
-      <router-link to="/login" style="color: white;">退出登录</router-link>
-    </div>
-    <a-menu
-        v-model:selectedKeys="selectedKeys"
-        theme="dark"
-        mode="horizontal"
-        :style="{ lineHeight: '64px' }"
-    >
-      <a-menu-item key="/welcome">
-        <router-link to="/welcome">
-          <coffee-outlined></coffee-outlined>&nbsp; 欢迎
-        </router-link>
-      </a-menu-item>
-      <a-menu-item key="/passenger">
-        <router-link to="/passenger">
-          <user-outlined/> &nbsp; 乘车人管理
-        </router-link>
-      </a-menu-item>
-      <a-menu-item key="/ticket">
-        <router-link to="/ticket">
-          <border-outer-outlined/> &nbsp; 余票查询
-        </router-link>
-      </a-menu-item>
-      <a-menu-item key="/my-ticket">
-        <router-link to="/my-ticket">
-          <idcard-outlined/> &nbsp; 我的车票
-        </router-link>
-      </a-menu-item>
-      <a-menu-item key="/seat">
-        <router-link to="/seat">
-          <usergroup-add-outlined/> &nbsp; 座位销售图
-        </router-link>
-      </a-menu-item>
-      <a-menu-item key="/admin">
-        <router-link to="/admin">
-          <desktop-outlined/> &nbsp; 关于控台管理
-        </router-link>
-      </a-menu-item>
-    </a-menu>
   </a-layout-header>
 </template>
 
 <script>
-import {defineComponent, ref, watch} from 'vue';
-import store from "@/store";
-import router from "@/router";
+import {computed, defineComponent} from 'vue';
+import store from '@/store';
+import {theme, toggleTheme} from '@/theme';
 
 export default defineComponent({
-  name: "header-view",
+  name: 'header-view',
   setup() {
-    let member = store.state.member;
-    const selectedKeys = ref([]);
-    watch(() => router.currentRoute.value.path, (newValue) => {
-      console.log('watch', newValue);
-      selectedKeys.value = [];
-      selectedKeys.value.push(newValue);
-    }, {immediate: true});
+    const memberMobile = computed(() => store.state.member.mobile || '访客');
     return {
-      selectedKeys,
-      member
+      memberMobile,
+      theme,
+      toggleTheme
     };
-  },
+  }
 });
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-.logo {
-  float: left;
-  height: 31px;
-  width: 150px;
-  color: white;
-  font-size: 20px;
-}
-</style>

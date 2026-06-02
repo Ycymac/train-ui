@@ -1,102 +1,51 @@
 <template>
-  <a-layout-header class="header">
-    <div class="logo">
-      <router-link to="/welcome" style="color: white; font-size: 18px">甲蛙12306</router-link>
+  <a-layout-header class="app-header">
+    <router-link class="brand-mark" to="/welcome">
+      <span class="brand-mark__icon"><control-outlined /></span>
+      <span>
+        <span class="brand-mark__title">RailFlow Admin</span>
+        <span class="brand-mark__caption">Operations Center</span>
+      </span>
+    </router-link>
+
+    <nav class="header-nav" aria-label="快捷导航">
+      <router-link class="header-nav__link" to="/business/daily-train">每日车次</router-link>
+      <router-link class="header-nav__link" to="/business/confirm-order">订单监控</router-link>
+      <router-link class="header-nav__link" to="/base/station">基础数据</router-link>
+      <router-link class="header-nav__link" to="/batch/job">调度任务</router-link>
+    </nav>
+
+    <div class="header-actions">
+      <span class="header-user"><strong>管理控制台</strong></span>
+      <button
+          class="theme-toggle"
+          type="button"
+          :aria-label="theme === 'dark' ? '切换到明亮模式' : '切换到暗黑模式'"
+          @click="toggleTheme"
+      >
+        <svg v-if="theme === 'dark'" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3.5" />
+          <path d="M12 2.5v2M12 19.5v2M4.5 12h-2M21.5 12h-2M5.1 5.1l1.4 1.4M17.5 17.5l1.4 1.4M18.9 5.1l-1.4 1.4M6.5 17.5l-1.4 1.4" />
+        </svg>
+        <svg v-else aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M20.4 15.5A8.1 8.1 0 0 1 8.5 3.6 8.6 8.6 0 1 0 20.4 15.5Z" />
+        </svg>
+      </button>
     </div>
-    <div style="float: right; color: white;">
-      欢迎使用admin管理控制台！
-    </div>
-    <a-menu
-        v-model:selectedKeys="selectedKeys"
-        theme="dark"
-        mode="horizontal"
-        :style="{ lineHeight: '64px' }"
-    >
-      <a-menu-item key="/welcome">
-        <router-link to="/welcome">
-          <coffee-outlined></coffee-outlined>&nbsp; 欢迎
-        </router-link>
-      </a-menu-item>
-      <a-menu-item key="/about">
-        <router-link to="/about">
-          <user-outlined></user-outlined>&nbsp; 关于
-        </router-link>
-      </a-menu-item>
-<!--      <a-sub-menu key="batch">-->
-<!--        <template #title>-->
-<!--          <span>-->
-<!--            <UnorderedListOutlined></UnorderedListOutlined>批次管理-->
-<!--          </span>-->
-<!--        </template>-->
-<!--        <a-menu-item key="/batch/job">-->
-<!--          <router-link to="/batch/job">-->
-<!--            <user-outlined></user-outlined>&nbsp; 任务管理-->
-<!--          </router-link>-->
-<!--        </a-menu-item>-->
-<!--      </a-sub-menu>-->
-<!--      <a-sub-menu key="base">-->
-<!--        <template #title>-->
-<!--          <span>-->
-<!--            <UnorderedListOutlined></UnorderedListOutlined>基础数据-->
-<!--          </span>-->
-<!--        </template>-->
-<!--        <a-menu-item key="/base/station">-->
-<!--          <router-link to="/base/station">-->
-<!--            <user-outlined></user-outlined>&nbsp; 车站管理-->
-<!--          </router-link>-->
-<!--        </a-menu-item>-->
-<!--        <a-menu-item key="/base/train">-->
-<!--          <router-link to="/base/train">-->
-<!--            <user-outlined></user-outlined>&nbsp; 火车管理-->
-<!--          </router-link>-->
-<!--        </a-menu-item>-->
-<!--        <a-menu-item key="/base/train-station">-->
-<!--          <router-link to="/base/train-station">-->
-<!--            <user-outlined></user-outlined>&nbsp; 列车车站-->
-<!--          </router-link>-->
-<!--        </a-menu-item>-->
-<!--        <a-menu-item key="/base/train-carriage">-->
-<!--          <router-link to="/base/train-carriage">-->
-<!--            <user-outlined></user-outlined>&nbsp; 火车车厢-->
-<!--          </router-link>-->
-<!--        </a-menu-item>-->
-<!--        <a-menu-item key="/base/train-seat">-->
-<!--          <router-link to="/base/train-seat">-->
-<!--            <user-outlined></user-outlined>&nbsp; 列车座位-->
-<!--          </router-link>-->
-<!--        </a-menu-item>-->
-<!--      </a-sub-menu>-->
-    </a-menu>
   </a-layout-header>
 </template>
 
 <script>
-import {defineComponent, ref, watch} from 'vue';
-import router from "@/router";
+import {defineComponent} from 'vue';
+import {theme, toggleTheme} from '@/theme';
 
 export default defineComponent({
-  name: "header-view",
+  name: 'header-view',
   setup() {
-    const selectedKeys = ref([]);
-    watch(() => router.currentRoute.value.path, (newValue) => {
-      console.log('watch', newValue);
-      selectedKeys.value = [];
-      selectedKeys.value.push(newValue);
-    }, {immediate: true});
     return {
-      selectedKeys
+      theme,
+      toggleTheme
     };
-  },
+  }
 });
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-.logo {
-  float: left;
-  height: 31px;
-  width: 150px;
-  color: white;
-  font-size: 20px;
-}
-</style>
