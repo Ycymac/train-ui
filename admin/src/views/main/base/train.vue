@@ -51,10 +51,13 @@
           <span class="mono-time">{{ record.startTime || '--' }} - {{ record.endTime || '--' }}</span>
         </template>
         <template v-else-if="column.dataIndex === 'detail'">
-          <div class="detail-chips">
+          <div v-if="getTrainDetail(record.code).loaded" class="detail-chips">
             <span>{{ getTrainDetail(record.code).stations.length }} 站</span>
             <span>{{ getTrainDetail(record.code).carriages.length }} 节车厢</span>
           </div>
+          <span v-else class="detail-placeholder">
+            {{ getTrainDetail(record.code).loading ? '加载中' : '待展开' }}
+          </span>
         </template>
         <template v-else-if="column.dataIndex === 'action'">
           <a-space>
@@ -837,6 +840,11 @@ export default defineComponent({
   color: var(--text-soft);
   background: var(--surface-strong);
   font-size: 12px;
+}
+
+.detail-placeholder {
+  color: var(--text-faint);
+  font-size: 13px;
 }
 
 .danger-link {
