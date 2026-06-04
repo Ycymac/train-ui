@@ -24,7 +24,7 @@
               <router-link to="/business/sk-token">令牌余量</router-link>
             </a-menu-item>
             <a-menu-item key="/business/confirm-order">
-              <router-link to="/business/confirm-order">订单信息</router-link>
+              <router-link to="/business/confirm-order">订单监控</router-link>
             </a-menu-item>
             <a-menu-item key="/business/daily-train-ticket">
               <router-link to="/business/daily-train-ticket">余票信息</router-link>
@@ -50,12 +50,6 @@
             </a-menu-item>
             <a-menu-item key="/base/train">
               <router-link to="/base/train">火车管理</router-link>
-            </a-menu-item>
-            <a-menu-item key="/base/train-station">
-              <router-link to="/base/train-station">列车车站</router-link>
-            </a-menu-item>
-            <a-menu-item key="/base/train-carriage">
-              <router-link to="/base/train-carriage">火车车厢</router-link>
             </a-menu-item>
             <a-menu-item key="/base/train-seat">
               <router-link to="/base/train-seat">列车座位</router-link>
