@@ -174,6 +174,36 @@ export default defineComponent({
       return (colOrder[a.col] || 99) - (colOrder[b.col] || 99);
     };
 
+    const queryAllSeats = async (code) => {
+      const pageSize = 100;
+      let page = 1;
+      let total = 0;
+      let rows = [];
+
+      do {
+        const response = await axios.get("/admin/train-seat/query-list", {
+          params: {
+            page,
+            pageSize,
+            trainCode: code
+          }
+        });
+        const data = response.data;
+        if (!data.success) {
+          notification.error({description: data.message});
+          return rows;
+        }
+
+        const content = data.content || {};
+        const pageRows = content.rows || [];
+        total = Number(content.total || pageRows.length);
+        rows = [...rows, ...pageRows];
+        page += 1;
+      } while (rows.length < total);
+
+      return rows;
+    };
+
     const loadSeats = async (code, force = false) => {
       const state = getSeatState(code);
       if (state.loaded && !force) {
@@ -181,22 +211,11 @@ export default defineComponent({
       }
       setSeatState(code, { loading: true });
       try {
-        const response = await axios.get("/admin/train-seat/query-list", {
-          params: {
-            page: 1,
-            pageSize: 2000,
-            trainCode: code
-          }
+        const seats = await queryAllSeats(code);
+        setSeatState(code, {
+          seats: seats.sort(sortSeat),
+          loaded: true
         });
-        const data = response.data;
-        if (data.success) {
-          setSeatState(code, {
-            seats: (data.content?.rows || []).sort(sortSeat),
-            loaded: true
-          });
-        } else {
-          notification.error({description: data.message});
-        }
       } finally {
         setSeatState(code, { loading: false });
       }

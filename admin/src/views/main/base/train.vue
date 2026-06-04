@@ -348,14 +348,34 @@ export default defineComponent({
       };
     };
 
-    const queryRows = async (url, params) => {
-      const response = await axios.get(url, { params });
-      const data = response.data;
-      if (data.success) {
-        return data.content?.rows || data.content || [];
-      }
-      notification.error({description: data.message});
-      return [];
+    const queryAllRows = async (url, params = {}) => {
+      const pageSize = 100;
+      let page = 1;
+      let total = 0;
+      let rows = [];
+
+      do {
+        const response = await axios.get(url, {
+          params: {
+            ...params,
+            page,
+            pageSize
+          }
+        });
+        const data = response.data;
+        if (!data.success) {
+          notification.error({description: data.message});
+          return rows;
+        }
+
+        const content = data.content || {};
+        const pageRows = content.rows || [];
+        total = Number(content.total || pageRows.length);
+        rows = [...rows, ...pageRows];
+        page += 1;
+      } while (rows.length < total);
+
+      return rows;
     };
 
     const loadTrainDetail = async (code, force = false) => {
@@ -366,8 +386,8 @@ export default defineComponent({
       setTrainDetail(code, { loading: true });
       try {
         const [stations, carriages] = await Promise.all([
-          queryRows("/admin/train-station/query-list", { page: 1, pageSize: 200, trainCode: code }),
-          queryRows("/admin/train-carriage/query-list", { page: 1, pageSize: 200, trainCode: code })
+          queryAllRows("/admin/train-station/query-list", { trainCode: code }),
+          queryAllRows("/admin/train-carriage/query-list", { trainCode: code })
         ]);
         setTrainDetail(code, {
           stations: stations.sort(byIndex),
