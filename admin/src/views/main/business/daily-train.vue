@@ -67,7 +67,7 @@
         </template>
         <template v-else-if="column.dataIndex === 'action'">
           <a-space>
-            <a @click.stop="loadDailyDetail(record, true)">同步结构</a>
+            <a @click.stop="syncDailyStructure(record)">同步结构</a>
             <a @click.stop="onEditDailyTrain(record)">编辑</a>
             <a-popconfirm
                 title="删除后不可恢复，确认删除？"
@@ -403,6 +403,10 @@ export default defineComponent({
       };
     };
 
+    const resetDailyDetails = () => {
+      dailyDetails.value = {};
+    };
+
     const queryAllRows = async (url, queryParams = {}) => {
       const pageSize = 100;
       let page = 1;
@@ -471,6 +475,41 @@ export default defineComponent({
         loadDailyDetail(record);
       } else {
         expandedDailyKeys.value = expandedDailyKeys.value.filter(item => item !== key);
+      }
+    };
+
+    const reloadExpandedDetails = async () => {
+      const records = dailyTrains.value.filter(record => expandedDailyKeys.value.includes(makeDailyKey(record)));
+      await Promise.all(records.map(record => loadDailyDetail(record, true)));
+    };
+
+    const syncDailyStructure = async (record) => {
+      const date = formatDate(record.date);
+      if (!date) {
+        notification.error({description: "缺少日期，无法同步结构"});
+        return;
+      }
+      const key = makeDailyKey(record);
+      setDailyDetail(record, { loading: true, loaded: false });
+      try {
+        const response = await axios.get("/admin/daily-train/gen-daily/" + date);
+        const data = response.data;
+        if (data.success) {
+          notification.success({description: "同步成功"});
+          resetDailyDetails();
+          await handleQuery({
+            page: pagination.value.current,
+            pageSize: pagination.value.pageSize
+          });
+          const latest = dailyTrains.value.find(item => makeDailyKey(item) === key);
+          if (latest) {
+            await loadDailyDetail(latest, true);
+          }
+        } else {
+          notification.error({description: data.message});
+        }
+      } finally {
+        setDailyDetail(record, { loading: false });
       }
     };
 
@@ -638,7 +677,7 @@ export default defineComponent({
         };
       }
       loading.value = true;
-      axios.get("/admin/daily-train/query-list", {
+      return axios.get("/admin/daily-train/query-list", {
         params: {
           page: param.page,
           pageSize: param.pageSize,
@@ -696,9 +735,12 @@ export default defineComponent({
         if (data.success) {
           notification.success({description: "生成成功"});
           generateDailyVisible.value = false;
+          resetDailyDetails();
           handleQuery({
             page: pagination.value.current,
             pageSize: pagination.value.pageSize
+          }).then(() => {
+            reloadExpandedDetails();
           });
         } else {
           notification.error({description: data.message});
@@ -742,6 +784,7 @@ export default defineComponent({
       handleTableChange,
       handleQuery,
       loadDailyDetail,
+      syncDailyStructure,
       onAddDailyTrain,
       onEditDailyTrain,
       onDeleteDailyTrain,
