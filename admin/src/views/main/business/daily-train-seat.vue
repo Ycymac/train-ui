@@ -183,7 +183,10 @@ export default defineComponent({
     const getSeatTypeName = (type) => (SEAT_TYPE_ARRAY || []).find(item => item.code === type)?.desc || type || '座位';
     const seatRow = (seat) => seat.row || seat.seatRow || Math.ceil(Number(seat.carriageSeatIndex || 0) / 5) || 0;
     const seatLabel = (seat) => `${seatRow(seat)}${seat.col || ''}`;
-    const seatKey = (seat) => seat.id || `${seat.trainCode}-${seat.carriageIndex}-${seat.carriageSeatIndex}-${seat.col}`;
+    // 以逻辑座位身份（车厢 + 排 + 列）作为唯一标识，而非 seat.id。
+    // 每日座位表可能为同一物理座位生成多条 id 不同的记录，若按 id 去重会把同一座位
+    // 当成多个座位渲染（每个座位重复出现）。一个座位由 (carriageIndex, row, col) 唯一确定。
+    const seatKey = (seat) => `${seat.carriageIndex || 0}-${seatRow(seat)}-${seat.col || ''}`;
 
     const isSold = (seat) => {
       const sell = seat.sell;
