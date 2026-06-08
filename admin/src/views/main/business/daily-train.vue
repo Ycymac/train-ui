@@ -258,7 +258,7 @@
              :confirm-loading="generateDailyLoading" ok-text="确认" cancel-text="取消">
       <a-form :model="generateDaily" :label-col="{span: 4}" :wrapper-col="{ span: 20 }">
         <a-form-item label="日期">
-          <a-date-picker v-model:value="generateDaily.date" valueFormat="YYYY-MM-DD" placeholder="请选择日期"/>
+          <a-date-picker v-model:value="generateDaily.date" placeholder="请选择日期"/>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -718,16 +718,18 @@ export default defineComponent({
     };
 
     const onClickGenerateDailyTrain = () => {
-      generateDaily.value = {date: params.value.date || null};
+      generateDaily.value = {
+        date: params.value.date ? dayjs(params.value.date) : null
+      };
       generateDailyVisible.value = true;
     };
 
     const handleGenerateDailyOK = () => {
-      const date = formatDate(generateDaily.value.date);
-      if (!date) {
+      if (!generateDaily.value.date) {
         notification.error({description: "请选择生成日期"});
         return;
       }
+      const date = dayjs(generateDaily.value.date).format("YYYY-MM-DD");
       generateDailyLoading.value = true;
       axios.get("/admin/daily-train/gen-daily/" + date).then((response) => {
         generateDailyLoading.value = false;
