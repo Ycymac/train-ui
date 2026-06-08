@@ -218,10 +218,13 @@ export default defineComponent({
     const queryAllRows = async (url, queryParams = {}) => {
       const pageSize = 100;
       let page = 1;
-      let total = 0;
+      let hasMore = true;
       let rows = [];
 
-      do {
+      // 注意：每日座位按 date + trainCode 过滤，但后端返回的 total 可能是未过滤的总量，
+      // 不能用 rows.length < total 作为翻页条件，否则会把同一页过滤结果重复累加（座位重复渲染）。
+      // 这里以“是否取到完整一页”判断是否还有下一页。
+      while (hasMore) {
         const response = await axios.get(url, {
           params: {
             ...queryParams,
@@ -232,20 +235,28 @@ export default defineComponent({
         const data = response.data;
         if (!data.success) {
           notification.error({description: data.message});
-          return rows;
+          break;
         }
 
         const content = data.content || {};
         const pageRows = content.rows || [];
-        total = Number(content.total || pageRows.length);
         rows = [...rows, ...pageRows];
         page += 1;
-        if (!pageRows.length) {
-          break;
-        }
-      } while (rows.length < total);
 
-      return rows;
+        // 取不满一页说明已是最后一页
+        hasMore = pageRows.length >= pageSize;
+      }
+
+      // 兜底去重，防止后端分页边界返回重复行
+      const seen = new Set();
+      return rows.filter(row => {
+        const key = seatKey(row);
+        if (seen.has(key)) {
+          return false;
+        }
+        seen.add(key);
+        return true;
+      });
     };
 
     const queryAllSeats = (record) => {
