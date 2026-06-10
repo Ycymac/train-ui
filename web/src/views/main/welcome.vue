@@ -156,7 +156,7 @@ h2 {
 }
 
 .primary-action {
-  color: #fff;
+  color: var(--on-primary);
   background: var(--primary);
   box-shadow: 0 8px 18px rgba(10, 11, 12, 0.18);
 }

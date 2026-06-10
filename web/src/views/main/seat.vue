@@ -1,54 +1,38 @@
 <template>
-  <div v-if="!param.date">
+  <div v-if="!param.date" class="seat-empty">
     请到余票查询里选择一趟列车，
-    <router-link to="/ticket">
-      跳转到余票查询
-    </router-link>
+    <router-link to="/ticket">跳转到余票查询</router-link>
   </div>
-  <div v-else>
-    <p style="font-weight: bold;">
-      日期：{{ param.date }}，车次：{{ param.trainCode }}，出发站：{{ param.departure }}，到达站：{{ param.destination }}
-    </p>
-    <table>
-      <tr>
-        <td style="width: 25px; background: #FF9900;"></td>
-        <td>：已被购买</td>
-        <td style="width: 20px;"></td>
-        <td style="width: 25px; background: #999999;"></td>
-        <td>：未被购买</td>
-      </tr>
-    </table>
-    <br>
-    <div v-for="(seatObj, carriage) in train" :key="carriage"
-         style="border: 3px solid #99CCFF;
-                 margin-bottom: 30px;
-                 padding: 5px;
-                 border-radius: 4px">
-      <div style="display:block;
-                  width:50px;
-                  height:10px;
-                  position:relative;
-                  top:-15px;
-                  text-align: center;
-                  background: white;">
-        {{ carriage }}
-      </div>
-      <table>
+  <div v-else class="seat-sell">
+    <div class="seat-sell__head">
+      <p class="eyebrow">SEAT SALES MAP</p>
+      <h1>座位销售图</h1>
+      <p class="seat-sell__meta">
+        <span>{{ param.date }}</span>
+        <span>{{ param.trainCode }}</span>
+        <span>{{ param.departure }} → {{ param.destination }}</span>
+      </p>
+    </div>
+
+    <div class="seat-legend">
+      <span class="legend-chip legend-chip--sold"></span>
+      <span class="legend-text">已被购买</span>
+      <span class="legend-chip legend-chip--free"></span>
+      <span class="legend-text">未被购买</span>
+    </div>
+
+    <div v-for="(seatObj, carriage) in train" :key="carriage" class="carriage-card">
+      <div class="carriage-card__tag">{{ carriage }}</div>
+      <table class="seat-table">
         <tr>
-          <td v-for="(sell, index) in Object.values(seatObj)[0]" :key="index"
-              style="text-align: center">
+          <td v-for="(sell, index) in Object.values(seatObj)[0]" :key="index" class="seat-table__num">
             {{ index + 1 }}
           </td>
         </tr>
         <tr v-for="(sellList, col) in seatObj" :key="col">
           <td v-for="(sell, index) in sellList" :key="index"
-              style="text-align: center;
-                      border: 2px solid white;
-                      background: grey;
-                      padding: 0 4px;
-                      color: white;
-                      "
-              :style="{background: (sell > 0 ? '#FF9900' : '#999999')}">{{ col }}
+              class="seat-cell"
+              :class="sell > 0 ? 'seat-cell--sold' : 'seat-cell--free'">{{ col }}
           </td>
         </tr>
       </table>
@@ -155,3 +139,147 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.seat-empty {
+  padding: 18px;
+  color: var(--text-soft);
+}
+
+.seat-sell {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.seat-sell__head {
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--text-faint);
+  font-family: var(--mono-font);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.seat-sell__head h1 {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--display-font);
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.seat-sell__meta {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 12px 0 0;
+  gap: 8px;
+}
+
+.seat-sell__meta span {
+  padding: 4px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--text-soft);
+  background: var(--surface-strong);
+  font-family: var(--mono-font);
+  font-size: 12px;
+}
+
+.seat-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-chip {
+  display: inline-block;
+  width: 22px;
+  height: 16px;
+  border-radius: var(--radius-sm);
+}
+
+.legend-chip--free {
+  background: var(--primary);
+}
+
+.legend-chip--sold {
+  border: 1px solid var(--line-strong);
+  background: repeating-linear-gradient(135deg, rgba(18, 18, 20, 0.16) 0 5px, rgba(255, 255, 255, 0.2) 5px 10px);
+}
+
+:root[data-theme='dark'] .legend-chip--sold {
+  background: repeating-linear-gradient(135deg, rgba(243, 243, 241, 0.2) 0 5px, transparent 5px 10px);
+}
+
+.legend-text {
+  margin-right: 10px;
+  color: var(--text-soft);
+  font-size: 13px;
+}
+
+.carriage-card {
+  position: relative;
+  padding: 18px 14px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, var(--surface-strong), var(--surface-muted));
+  box-shadow: var(--shadow-soft);
+}
+
+.carriage-card__tag {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--on-primary);
+  background: var(--primary);
+  font-family: var(--display-font);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.seat-table {
+  border-collapse: separate;
+  border-spacing: 6px;
+}
+
+.seat-table__num {
+  color: var(--text-faint);
+  font-family: var(--mono-font);
+  font-size: 12px;
+  text-align: center;
+}
+
+.seat-cell {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  color: var(--on-primary);
+  font-family: var(--mono-font);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.seat-cell--free {
+  background: var(--primary);
+}
+
+.seat-cell--sold {
+  position: relative;
+  color: var(--text-faint);
+  border: 1px solid var(--line-strong);
+  background: repeating-linear-gradient(135deg, rgba(18, 18, 20, 0.16) 0 5px, transparent 5px 10px);
+}
+
+:root[data-theme='dark'] .seat-cell--sold {
+  background: repeating-linear-gradient(135deg, rgba(243, 243, 241, 0.18) 0 5px, transparent 5px 10px);
+}
+</style>

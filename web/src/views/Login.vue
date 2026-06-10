@@ -1,7 +1,8 @@
 <template>
   <a-row class="login">
     <a-col :span="6" :offset="9" class="login-main">
-      <h1 style="text-align: center"><rocket-two-tone />12306售票系统</h1>
+      <p class="login-eyebrow">RAILFLOW · 12306</p>
+      <h1>12306 售票系统</h1>
       <a-form
           :model="loginForm"
           name="basic"
@@ -97,15 +98,37 @@ export default defineComponent({
 </script>
 
 <style>
-.login-main h1 {
-  font-size: 25px;
-  font-weight: bold;
+.login {
+  min-height: 100vh;
+  align-items: center;
 }
+
+.login-eyebrow {
+  margin: 0 0 6px;
+  color: var(--text-faint);
+  font-family: var(--mono-font);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-align: center;
+}
+
+.login-main h1 {
+  margin: 0 0 22px;
+  color: var(--text);
+  font-family: var(--display-font);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
 .login-main {
-  margin-top: 100px;
-  padding: 30px 30px 20px;
-  border: 2px solid grey;
-  border-radius: 10px;
-  background-color: #fcfcfc;
+  padding: 32px 30px 22px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, var(--surface-strong), var(--surface-muted));
+  box-shadow: var(--shadow);
+  backdrop-filter: var(--blur);
 }
 </style>

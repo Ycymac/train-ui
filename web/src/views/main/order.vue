@@ -91,7 +91,7 @@
           <a-switch class="choose-seat-item" v-for="item in SEAT_COL_ARRAY" :key="item.code"
                     v-model:checked="chooseSeatObj[item.code + '2']" :checked-children="item.desc" :un-checked-children="item.desc" />
         </div>
-        <div style="color: #999999">提示：您可以选择{{tickets.length}}个座位</div>
+        <div style="color: var(--text-faint)">提示：您可以选择{{tickets.length}}个座位</div>
       </div>
       <br>
       <div style="color: red">
@@ -551,15 +551,18 @@ export default defineComponent({
 
 <style>
 .order-train .order-train-main {
+  font-family: var(--display-font);
   font-size: 18px;
-  font-weight: bold;
+  font-weight: 700;
 }
 .order-train .order-train-ticket {
   margin-top: 15px;
 }
 .order-train .order-train-ticket .order-train-ticket-main {
-  color: red;
+  color: var(--text);
+  font-family: var(--display-font);
   font-size: 18px;
+  font-weight: 700;
 }
 
 .order-tickets {
