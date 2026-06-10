@@ -37,8 +37,8 @@
   --line: rgba(240, 240, 242, 0.12);
   --line-strong: rgba(240, 240, 242, 0.24);
   --text: #f3f3f1;
-  --text-soft: #b9bbbd;
-  --text-faint: #828487;
+  --text-soft: #c2c4c6;
+  --text-faint: #a2a5a8;
   --primary: #f3f3f1;
   --primary-strong: #ffffff;
   --primary-soft: rgba(243, 243, 241, 0.12);
@@ -486,6 +486,50 @@ a {
   color: var(--text) !important;
   border-color: var(--line) !important;
   background: var(--surface-strong) !important;
+}
+
+/* 占位符 / 空状态 / 下拉箭头：提高对比度，暗黑模式下不再发灰看不清 */
+.ant-input::placeholder,
+.ant-input-number-input::placeholder,
+.ant-picker-input > input::placeholder,
+.ant-select-selection-placeholder,
+.ant-picker .ant-picker-input > input::placeholder {
+  color: var(--text-soft) !important;
+  opacity: 1 !important;
+}
+
+.ant-select-arrow,
+.ant-picker-suffix,
+.ant-select-clear,
+.ant-picker-clear {
+  color: var(--text-soft) !important;
+}
+
+/* 空数据 “No data” 文案与图标 */
+.ant-empty-description,
+.ant-empty .ant-empty-description {
+  color: var(--text-soft) !important;
+}
+
+.ant-empty-normal {
+  color: var(--text-soft) !important;
+}
+
+/* 下拉浮层选项：跟随主题 */
+.ant-select-dropdown {
+  color: var(--text) !important;
+  background: var(--surface-strong) !important;
+  backdrop-filter: var(--blur);
+}
+
+.ant-select-item {
+  color: var(--text) !important;
+}
+
+.ant-select-item-option-active,
+.ant-select-item-option-selected {
+  color: var(--primary) !important;
+  background: var(--primary-soft) !important;
 }
 
 .ant-modal-content {
