@@ -18,8 +18,7 @@
       <span v-for="item in seatLegend" :key="item.code" class="legend-chip" :class="'seat-col--' + item.code">
         {{ item.code }} {{ item.name }}
       </span>
-      <span class="legend-chip legend-chip--sold">已售</span>
-      <span class="legend-note">中间留白为过道，卡片默认折叠，展开后再加载座位数量。</span>
+      <span class="legend-note">中间留白为过道，卡片默认折叠，展开后再加载座位布局。</span>
     </div>
 
     <a-spin :spinning="loading">
@@ -56,7 +55,7 @@
                         <p class="eyebrow">CARRIAGE {{ padIndex(carriage.index) }}</p>
                         <h2>{{ padIndex(carriage.index) }} 车厢 · {{ getSeatTypeName(carriage.seatType) }}</h2>
                       </div>
-                      <span>{{ carriage.seats.length }} 座 · 已售 {{ carriage.soldCount }}</span>
+                      <span>{{ carriage.seats.length }} 座</span>
                     </div>
 
                     <div class="train-body-diagram">
@@ -69,10 +68,9 @@
                                 v-for="seat in row.left"
                                 :key="seatKey(seat)"
                                 class="seat-cell"
-                                :class="['seat-col--' + seat.col, { 'is-sold': isSold(seat) }]"
+                                :class="'seat-col--' + seat.col"
                                 :title="seatTitle(seat)">
                               <strong>{{ seatLabel(seat) }}</strong>
-                              <small>{{ isSold(seat) ? '已售' : '可售' }}</small>
                             </span>
                           </div>
                           <div class="seat-aisle">过道</div>
@@ -81,10 +79,9 @@
                                 v-for="seat in row.right"
                                 :key="seatKey(seat)"
                                 class="seat-cell"
-                                :class="['seat-col--' + seat.col, { 'is-sold': isSold(seat) }]"
+                                :class="'seat-col--' + seat.col"
                                 :title="seatTitle(seat)">
                               <strong>{{ seatLabel(seat) }}</strong>
-                              <small>{{ isSold(seat) ? '已售' : '可售' }}</small>
                             </span>
                           </div>
                         </div>
@@ -197,8 +194,7 @@ export default defineComponent({
     };
 
     const seatTitle = (seat) => {
-      const status = isSold(seat) ? '已售' : '可售';
-      return `${formatDate(seat.date)} · ${seat.trainCode} · ${padIndex(seat.carriageIndex)}车 · ${seatLabel(seat)} · ${status}`;
+      return `${formatDate(seat.date)} · ${seat.trainCode} · ${padIndex(seat.carriageIndex)}车 · ${seatLabel(seat)}`;
     };
 
     const sortSeat = (a, b) => {
@@ -352,8 +348,7 @@ export default defineComponent({
       }
       const groups = getCarriageGroups(record);
       const total = groups.reduce((sum, group) => sum + group.seats.length, 0);
-      const sold = groups.reduce((sum, group) => sum + group.soldCount, 0);
-      return `${groups.length} 节 / ${total} 座 · 已售 ${sold}`;
+      return `${groups.length} 节 / ${total} 座`;
     };
 
     const handleQuery = async () => {
@@ -705,38 +700,16 @@ export default defineComponent({
   box-shadow: 0 4px 10px rgba(10, 11, 12, 0.12);
 }
 
-.seat-cell.is-sold {
-  color: rgba(255, 255, 255, 0.78);
-  filter: saturate(0.45);
-}
-
-.seat-cell.is-sold::after {
-  position: absolute;
-  inset: 4px;
-  content: "";
-  border-radius: 3px;
-  background: repeating-linear-gradient(135deg, rgba(18, 18, 20, 0.32) 0 5px, transparent 5px 10px);
-  pointer-events: none;
-}
-
-.seat-cell strong,
-.seat-cell small {
+.seat-cell strong {
   position: relative;
   z-index: 1;
-}
-
-.seat-cell strong {
-  font-size: 13px;
+  font-family: var(--mono-font);
+  font-size: 12px;
+  font-weight: 700;
   line-height: 1;
 }
 
-.seat-cell small {
-  opacity: 0.75;
-  font-size: 9px;
-  line-height: 1;
-}
-
-/* 可售座位五色标记（构成主义五原色），不再使用蓝色系 */
+/* 座位列五色标记（构成主义五原色），不再使用蓝色系 */
 .seat-col--A {
   background: #d8412f;
 }

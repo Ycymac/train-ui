@@ -16,6 +16,9 @@
     </nav>
 
     <div class="header-actions">
+      <span class="header-clock" role="timer" aria-label="当前时间">
+        {{ clock.h }}<span class="header-clock__sep">:</span>{{ clock.m }}<span class="header-clock__sep">:</span>{{ clock.s }}
+      </span>
       <span class="header-user">当前用户 <strong>{{ memberMobile }}</strong></span>
       <router-link class="header-logout" to="/login">退出</router-link>
       <button
@@ -37,7 +40,7 @@
 </template>
 
 <script>
-import {computed, defineComponent} from 'vue';
+import {computed, defineComponent, onMounted, onUnmounted, reactive} from 'vue';
 import store from '@/store';
 import {theme, toggleTheme} from '@/theme';
 
@@ -45,8 +48,26 @@ export default defineComponent({
   name: 'header-view',
   setup() {
     const memberMobile = computed(() => store.state.member.mobile || '访客');
+
+    // 实时时钟
+    const clock = reactive({h: '--', m: '--', s: '--'});
+    const pad = (n) => String(n).padStart(2, '0');
+    const tick = () => {
+      const now = new Date();
+      clock.h = pad(now.getHours());
+      clock.m = pad(now.getMinutes());
+      clock.s = pad(now.getSeconds());
+    };
+    let timer;
+    onMounted(() => {
+      tick();
+      timer = setInterval(tick, 1000);
+    });
+    onUnmounted(() => clearInterval(timer));
+
     return {
       memberMobile,
+      clock,
       theme,
       toggleTheme
     };

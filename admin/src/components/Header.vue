@@ -16,6 +16,9 @@
     </nav>
 
     <div class="header-actions">
+      <span class="header-clock" role="timer" aria-label="当前时间">
+        {{ clock.h }}<span class="header-clock__sep">:</span>{{ clock.m }}<span class="header-clock__sep">:</span>{{ clock.s }}
+      </span>
       <span class="header-user"><strong>管理控制台</strong></span>
       <button
           class="theme-toggle"
@@ -36,13 +39,30 @@
 </template>
 
 <script>
-import {defineComponent} from 'vue';
+import {defineComponent, onMounted, onUnmounted, reactive} from 'vue';
 import {theme, toggleTheme} from '@/theme';
 
 export default defineComponent({
   name: 'header-view',
   setup() {
+    // 实时时钟
+    const clock = reactive({h: '--', m: '--', s: '--'});
+    const pad = (n) => String(n).padStart(2, '0');
+    const tick = () => {
+      const now = new Date();
+      clock.h = pad(now.getHours());
+      clock.m = pad(now.getMinutes());
+      clock.s = pad(now.getSeconds());
+    };
+    let timer;
+    onMounted(() => {
+      tick();
+      timer = setInterval(tick, 1000);
+    });
+    onUnmounted(() => clearInterval(timer));
+
     return {
+      clock,
       theme,
       toggleTheme
     };
