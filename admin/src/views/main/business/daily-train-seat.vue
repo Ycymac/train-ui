@@ -416,20 +416,20 @@ export default defineComponent({
   overflow: hidden;
   padding: 26px 28px;
   border: 1px solid var(--line);
-  border-radius: 24px;
+  border-radius: var(--radius-lg);
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
   background:
-      linear-gradient(135deg, rgba(255, 255, 252, 0.9), rgba(241, 247, 245, 0.82)),
-      radial-gradient(circle at 90% 10%, rgba(65, 151, 169, 0.18), transparent 30%);
+      linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(236, 236, 234, 0.74)),
+      radial-gradient(circle at 90% 10%, rgba(18, 18, 20, 0.08), transparent 30%);
   box-shadow: var(--shadow-soft);
 }
 
 :root[data-theme='dark'] .seat-map-hero {
   background:
-      linear-gradient(135deg, rgba(43, 45, 45, 0.92), rgba(34, 39, 40, 0.78)),
-      radial-gradient(circle at 90% 10%, rgba(65, 151, 169, 0.16), transparent 30%);
+      linear-gradient(135deg, rgba(36, 37, 39, 0.92), rgba(28, 29, 31, 0.74)),
+      radial-gradient(circle at 90% 10%, rgba(243, 243, 241, 0.08), transparent 30%);
 }
 
 .eyebrow {
@@ -493,9 +493,9 @@ export default defineComponent({
 }
 
 .legend-chip--sold {
-  border: 1px solid rgba(32, 35, 38, 0.2);
+  border: 1px solid var(--line-strong);
   color: var(--text-soft);
-  background: repeating-linear-gradient(135deg, rgba(32, 35, 38, 0.14) 0 5px, rgba(255, 255, 255, 0.2) 5px 10px);
+  background: repeating-linear-gradient(135deg, rgba(18, 18, 20, 0.16) 0 5px, rgba(255, 255, 255, 0.2) 5px 10px);
 }
 
 .train-seat-list {
@@ -506,13 +506,13 @@ export default defineComponent({
 .train-seat-card {
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 22px;
+  border-radius: var(--radius-lg);
   background: linear-gradient(145deg, var(--surface-strong), var(--surface-muted));
   box-shadow: 0 12px 28px rgba(31, 41, 46, 0.05);
 }
 
 .train-seat-card.is-open {
-  border-color: rgba(65, 151, 169, 0.28);
+  border-color: var(--line-strong);
 }
 
 .train-seat-card__head {
@@ -549,10 +549,10 @@ export default defineComponent({
   display: grid;
   width: 44px;
   height: 44px;
-  border-radius: 15px 7px 15px 7px;
+  border-radius: var(--radius-md) var(--radius-sm) var(--radius-md) var(--radius-sm);
   color: #fff;
   font-weight: 900;
-  background: linear-gradient(135deg, #202326, #397f91);
+  background: linear-gradient(135deg, #2b2c2e, #0c0d0e);
   place-items: center;
 }
 
@@ -596,7 +596,7 @@ export default defineComponent({
 .carriage-map {
   padding: 18px;
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.36);
 }
 
@@ -633,10 +633,10 @@ export default defineComponent({
   display: grid;
   overflow: hidden;
   border: 1px solid var(--line-strong);
-  border-radius: 28px 14px 14px 28px;
+  border-radius: var(--radius-lg) var(--radius-sm) var(--radius-sm) var(--radius-lg);
   grid-template-columns: 56px 1fr;
   background:
-      linear-gradient(90deg, rgba(32, 35, 38, 0.08), transparent 12%),
+      linear-gradient(90deg, rgba(18, 18, 20, 0.08), transparent 12%),
       rgba(255, 255, 255, 0.34);
 }
 
@@ -648,22 +648,23 @@ export default defineComponent({
 
 .train-body-diagram__nose {
   background:
-      linear-gradient(135deg, transparent 0 43%, rgba(32, 35, 38, 0.92) 44% 56%, transparent 57%),
-      linear-gradient(180deg, #3b8997, #75a982);
+      linear-gradient(135deg, transparent 0 43%, rgba(18, 18, 20, 0.92) 44% 56%, transparent 57%),
+      linear-gradient(180deg, #3a3b3d, #131416);
 }
 
 .seat-grid {
   display: grid;
-  gap: 8px;
+  gap: 7px;
   padding: 16px;
-  min-width: 620px;
+  min-width: 0;
 }
 
 .seat-row {
   display: grid;
-  grid-template-columns: 42px minmax(160px, 1fr) 70px minmax(120px, 0.72fr);
+  grid-template-columns: 38px max-content 58px max-content;
   align-items: center;
-  gap: 10px;
+  justify-content: start;
+  gap: 8px;
 }
 
 .seat-row__number {
@@ -675,7 +676,7 @@ export default defineComponent({
 
 .seat-cluster {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .seat-cluster--right {
@@ -684,9 +685,9 @@ export default defineComponent({
 
 .seat-aisle {
   display: grid;
-  height: 34px;
+  height: 30px;
   border: 1px dashed var(--line-strong);
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   color: var(--text-faint);
   font-size: 11px;
   place-items: center;
@@ -695,13 +696,13 @@ export default defineComponent({
 .seat-cell {
   position: relative;
   display: grid;
-  width: 48px;
-  height: 42px;
-  border: 1px solid rgba(255, 255, 255, 0.34);
-  border-radius: 12px 12px 7px 7px;
+  width: 44px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--radius-sm);
   place-items: center;
   color: #fff;
-  box-shadow: 0 7px 16px rgba(32, 35, 38, 0.08);
+  box-shadow: 0 4px 10px rgba(10, 11, 12, 0.12);
 }
 
 .seat-cell.is-sold {
@@ -711,10 +712,10 @@ export default defineComponent({
 
 .seat-cell.is-sold::after {
   position: absolute;
-  inset: 5px;
+  inset: 4px;
   content: "";
-  border-radius: 9px 9px 5px 5px;
-  background: repeating-linear-gradient(135deg, rgba(32, 35, 38, 0.28) 0 5px, transparent 5px 10px);
+  border-radius: 3px;
+  background: repeating-linear-gradient(135deg, rgba(18, 18, 20, 0.32) 0 5px, transparent 5px 10px);
   pointer-events: none;
 }
 
@@ -735,24 +736,25 @@ export default defineComponent({
   line-height: 1;
 }
 
+/* 可售座位五色标记（构成主义五原色），不再使用蓝色系 */
 .seat-col--A {
-  background: linear-gradient(145deg, #1f7d8d, #55adbd);
+  background: #d8412f;
 }
 
 .seat-col--B {
-  background: linear-gradient(145deg, #4c7b5f, #7faf82);
+  background: #e8a022;
 }
 
 .seat-col--C {
-  background: linear-gradient(145deg, #24475e, #5d85a5);
+  background: #2f8f57;
 }
 
 .seat-col--D {
-  background: linear-gradient(145deg, #32523f, #6f9f79);
+  background: #2f5fd0;
 }
 
 .seat-col--F {
-  background: linear-gradient(145deg, #171b1e, #535f67);
+  background: #1c1d1f;
 }
 
 .seat-collapse-enter-active,

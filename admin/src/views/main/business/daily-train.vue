@@ -65,6 +65,14 @@
             {{ getDailyDetail(record).loading ? '加载中' : '待展开' }}
           </span>
         </template>
+        <template v-else-if="column.dataIndex === 'token'">
+          <div class="token-cell">
+            <span class="token-chip" :class="{ 'token-chip--empty': getTokenCount(record) === null }">
+              {{ getTokenCount(record) === null ? '无令牌' : getTokenCount(record) }}
+            </span>
+            <a v-if="getTokenCount(record) !== null" @click.stop="onEditToken(record)">改令牌</a>
+          </div>
+        </template>
         <template v-else-if="column.dataIndex === 'action'">
           <a-space>
             <a @click.stop="loadDailyDetail(record, true)">刷新结构</a>
@@ -262,6 +270,21 @@
         </a-form-item>
       </a-form>
     </a-modal>
+
+    <a-modal v-model:open="tokenVisible" title="修改令牌余量" @ok="handleTokenOk"
+             ok-text="确认" cancel-text="取消">
+      <a-form :model="skToken" :label-col="{span: 5}" :wrapper-col="{ span: 19 }">
+        <a-form-item label="日期">
+          <a-date-picker v-model:value="skToken.date" valueFormat="YYYY-MM-DD" placeholder="请选择日期" disabled/>
+        </a-form-item>
+        <a-form-item label="车次编号">
+          <a-input v-model:value="skToken.trainCode" disabled/>
+        </a-form-item>
+        <a-form-item label="令牌余量">
+          <a-input-number v-model:value="skToken.count" :min="0" style="width: 100%"/>
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </section>
 </template>
 
@@ -349,12 +372,23 @@ export default defineComponent({
     const generateDailyVisible = ref(false);
     const generateDailyLoading = ref(false);
 
+    // 令牌余量：按 date + trainCode 映射，直接展示在每日车次行中
+    const tokenMap = ref({});
+    const tokenVisible = ref(false);
+    const skToken = ref({
+      id: undefined,
+      date: undefined,
+      trainCode: undefined,
+      count: undefined,
+    });
+
     const columns = [
       { title: '日期', dataIndex: 'date', key: 'date', width: 140 },
       { title: '车次', dataIndex: 'code', key: 'code', width: 180 },
       { title: '线路', dataIndex: 'route', key: 'route' },
       { title: '运行时间', dataIndex: 'time', key: 'time', width: 190 },
       { title: '结构', dataIndex: 'detail', key: 'detail', width: 180 },
+      { title: '令牌余量', dataIndex: 'token', key: 'token', width: 150 },
       { title: '操作', dataIndex: 'action', key: 'action', width: 210 }
     ];
 
@@ -376,8 +410,7 @@ export default defineComponent({
     };
 
     const makeDailyKey = (record) => `${formatDate(record.date) || 'no-date'}-${record.code || record.trainCode || 'no-code'}`;
-    const byIndex = (a, b) => Number(a.index || a.carriageIndex || 0) - Number(b.index || b.carriageIndex || 0);
-    const getTrainTypeName = (type) => (TRAIN_TYPE_ARRAY || []).find(item => item.code === type)?.desc || type || '--';
+    const byIndex = (a, b) => Number(a.index || a.carriageIndex || 0) - Number(b.index || b.carriageIndex || 0);    const getTrainTypeName = (type) => (TRAIN_TYPE_ARRAY || []).find(item => item.code === type)?.desc || type || '--';
     const getSeatTypeName = (type) => (SEAT_TYPE_ARRAY || []).find(item => item.code === type)?.desc || type || '--';
     const padIndex = (value) => String(value || 0).padStart(2, '0');
 
@@ -653,6 +686,7 @@ export default defineComponent({
           pagination.value.current = param.page;
           pagination.value.total = data.content.total;
           dailyTrains.value.forEach(item => getDailyDetail(item));
+          loadTokens();
         } else {
           notification.error({description: data.message});
         }
@@ -664,6 +698,48 @@ export default defineComponent({
       handleQuery({
         page: page.current,
         pageSize: page.pageSize
+      });
+    };
+
+    /* ------------------- 令牌余量 --------------------- */
+    const tokenKey = (date, trainCode) => `${formatDate(date) || 'no-date'}-${trainCode || 'no-code'}`;
+
+    // 拉取全部秒杀令牌，按 date + trainCode 建立映射，供每日车次行展示
+    const loadTokens = async () => {
+      const rows = await queryAllRows("/admin/sk-token/query-list");
+      const map = {};
+      rows.forEach(row => {
+        map[tokenKey(row.date, row.trainCode)] = row;
+      });
+      tokenMap.value = map;
+    };
+
+    const getToken = (record) => tokenMap.value[tokenKey(record.date, record.code || record.trainCode)] || null;
+    const getTokenCount = (record) => {
+      const token = getToken(record);
+      return token ? Number(token.count) : null;
+    };
+
+    const onEditToken = (record) => {
+      const token = getToken(record);
+      if (!token) {
+        notification.error({description: "该车次暂无令牌记录"});
+        return;
+      }
+      skToken.value = window.Tool.copy(token);
+      tokenVisible.value = true;
+    };
+
+    const handleTokenOk = () => {
+      axios.post("/admin/sk-token/save", skToken.value).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          notification.success({description: "令牌余量已更新"});
+          tokenVisible.value = false;
+          loadTokens();
+        } else {
+          notification.error({description: data.message});
+        }
       });
     };
 
@@ -735,6 +811,11 @@ export default defineComponent({
       generateDaily,
       generateDailyVisible,
       generateDailyLoading,
+      tokenVisible,
+      skToken,
+      getTokenCount,
+      onEditToken,
+      handleTokenOk,
       formatDate,
       makeDailyKey,
       getDailyDetail,
@@ -788,15 +869,15 @@ export default defineComponent({
   justify-content: space-between;
   gap: 24px;
   background:
-      linear-gradient(135deg, rgba(255, 255, 252, 0.92), rgba(240, 248, 248, 0.78)),
-      radial-gradient(circle at 92% 16%, rgba(80, 176, 189, 0.18), transparent 28%);
+      linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(236, 236, 234, 0.74)),
+      radial-gradient(circle at 92% 16%, rgba(18, 18, 20, 0.08), transparent 28%);
   box-shadow: var(--shadow-soft);
 }
 
 :root[data-theme='dark'] .daily-command__hero {
   background:
-      linear-gradient(135deg, rgba(43, 45, 45, 0.92), rgba(34, 39, 40, 0.78)),
-      radial-gradient(circle at 92% 16%, rgba(80, 176, 189, 0.16), transparent 28%);
+      linear-gradient(135deg, rgba(36, 37, 39, 0.92), rgba(28, 29, 31, 0.74)),
+      radial-gradient(circle at 92% 16%, rgba(243, 243, 241, 0.08), transparent 28%);
 }
 
 .daily-command__hero::before {
@@ -806,7 +887,7 @@ export default defineComponent({
   width: 46%;
   height: 3px;
   content: "";
-  background: repeating-linear-gradient(90deg, rgba(38, 42, 45, 0.75) 0 34px, transparent 34px 44px);
+  background: repeating-linear-gradient(90deg, rgba(18, 18, 20, 0.7) 0 34px, transparent 34px 44px);
   transform: skewX(-18deg);
 }
 
@@ -817,9 +898,9 @@ export default defineComponent({
   width: 210px;
   height: 42px;
   content: "";
-  border: 1px solid rgba(39, 47, 52, 0.2);
-  border-radius: 22px 8px 8px 22px;
-  background: linear-gradient(90deg, rgba(65, 151, 169, 0.24), rgba(96, 145, 118, 0.18));
+  border: 1px solid var(--line-strong);
+  border-radius: 18px 6px 6px 18px;
+  background: linear-gradient(90deg, rgba(18, 18, 20, 0.18), rgba(18, 18, 20, 0.06));
   clip-path: polygon(0 50%, 12% 0, 100% 0, 100% 100%, 12% 100%);
 }
 
@@ -909,10 +990,10 @@ export default defineComponent({
   display: grid;
   width: 42px;
   height: 42px;
-  border-radius: 14px 7px 14px 7px;
+  border-radius: var(--radius-md) var(--radius-sm) var(--radius-md) var(--radius-sm);
   color: #fff;
   font-weight: 900;
-  background: linear-gradient(135deg, #202326, #397f91);
+  background: linear-gradient(135deg, #2b2c2e, #0c0d0e);
   place-items: center;
 }
 
@@ -944,7 +1025,7 @@ export default defineComponent({
 
 .route-line i {
   height: 2px;
-  background: linear-gradient(90deg, var(--success), var(--primary));
+  background: linear-gradient(90deg, var(--text-faint), var(--text));
 }
 
 .mono-time {
@@ -970,6 +1051,34 @@ export default defineComponent({
 .detail-placeholder {
   color: var(--text-faint);
   font-size: 13px;
+}
+
+.token-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.token-chip {
+  display: inline-flex;
+  min-width: 40px;
+  padding: 4px 11px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  justify-content: center;
+  color: var(--text);
+  background: var(--surface-strong);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.token-chip--empty {
+  border-style: dashed;
+  color: var(--text-faint);
+  font-family: var(--body-font);
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .danger-link {
@@ -1002,7 +1111,7 @@ export default defineComponent({
   width: 150px;
   height: 150px;
   content: "";
-  border: 1px solid rgba(65, 151, 169, 0.18);
+  border: 1px solid var(--line);
   transform: rotate(18deg);
 }
 
@@ -1058,11 +1167,11 @@ export default defineComponent({
   display: grid;
   width: 36px;
   height: 36px;
-  border: 1px solid rgba(66, 151, 169, 0.26);
+  border: 1px solid var(--line-strong);
   border-radius: 50%;
-  color: var(--primary);
+  color: var(--text);
   font-weight: 900;
-  background: rgba(66, 151, 169, 0.08);
+  background: var(--primary-soft);
   place-items: center;
 }
 
@@ -1110,8 +1219,8 @@ export default defineComponent({
 
 .carriage-unit__nose {
   background:
-      linear-gradient(135deg, transparent 0 46%, rgba(33, 37, 40, 0.94) 47% 53%, transparent 54%),
-      linear-gradient(180deg, #3b8997, #77a987);
+      linear-gradient(135deg, transparent 0 46%, rgba(18, 18, 20, 0.94) 47% 53%, transparent 54%),
+      linear-gradient(180deg, #3a3b3d, #131416);
 }
 
 .carriage-unit__content {

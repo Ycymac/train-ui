@@ -569,14 +569,14 @@ export default defineComponent({
   padding: 5px 10px;
 }
 .order-tickets .order-tickets-header {
-  background-color: cornflowerblue;
-  border: solid 1px cornflowerblue;
-  color: white;
+  background-color: var(--text);
+  border: solid 1px var(--text);
+  color: var(--app-bg-soft);
   font-size: 16px;
   padding: 5px 0;
 }
 .order-tickets .order-tickets-row {
-  border: solid 1px cornflowerblue;
+  border: solid 1px var(--line-strong);
   border-top: none;
   vertical-align: middle;
   line-height: 30px;

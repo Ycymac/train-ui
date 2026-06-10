@@ -158,7 +158,7 @@ h2 {
 .primary-action {
   color: #fff;
   background: var(--primary);
-  box-shadow: 0 8px 18px rgba(71, 119, 168, 0.16);
+  box-shadow: 0 8px 18px rgba(10, 11, 12, 0.18);
 }
 
 .secondary-action {
@@ -200,7 +200,7 @@ h2 {
   left: 36px;
   height: 2px;
   content: "";
-  background: linear-gradient(90deg, var(--primary), rgba(71, 119, 168, 0.16));
+  background: linear-gradient(90deg, var(--primary), rgba(18, 18, 20, 0.16));
 }
 
 .route-station {
@@ -218,12 +218,12 @@ h2 {
   border: 3px solid var(--surface-strong);
   border-radius: 50%;
   background: #b9c3cb;
-  box-shadow: 0 0 0 3px rgba(71, 119, 168, 0.08);
+  box-shadow: 0 0 0 3px rgba(18, 18, 20, 0.08);
 }
 
 .route-station--active i {
   background: var(--primary);
-  box-shadow: 0 0 0 5px rgba(71, 119, 168, 0.12);
+  box-shadow: 0 0 0 5px rgba(18, 18, 20, 0.12);
   animation: station-pulse 2s ease-in-out infinite;
 }
 
@@ -316,7 +316,7 @@ h2 {
 
 @keyframes station-pulse {
   50% {
-    box-shadow: 0 0 0 8px rgba(71, 119, 168, 0.05);
+    box-shadow: 0 0 0 8px rgba(18, 18, 20, 0.05);
   }
 }
 

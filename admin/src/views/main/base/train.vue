@@ -676,15 +676,15 @@ export default defineComponent({
   justify-content: space-between;
   gap: 24px;
   background:
-      linear-gradient(135deg, rgba(255, 255, 252, 0.92), rgba(240, 248, 248, 0.78)),
-      radial-gradient(circle at 92% 16%, rgba(80, 176, 189, 0.18), transparent 28%);
+      linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(236, 236, 234, 0.74)),
+      radial-gradient(circle at 92% 16%, rgba(18, 18, 20, 0.08), transparent 28%);
   box-shadow: var(--shadow-soft);
 }
 
 :root[data-theme='dark'] .train-command__hero {
   background:
-      linear-gradient(135deg, rgba(43, 45, 45, 0.92), rgba(34, 39, 40, 0.78)),
-      radial-gradient(circle at 92% 16%, rgba(80, 176, 189, 0.16), transparent 28%);
+      linear-gradient(135deg, rgba(36, 37, 39, 0.92), rgba(28, 29, 31, 0.74)),
+      radial-gradient(circle at 92% 16%, rgba(243, 243, 241, 0.08), transparent 28%);
 }
 
 .train-command__hero::before {
@@ -694,7 +694,7 @@ export default defineComponent({
   width: 46%;
   height: 3px;
   content: "";
-  background: repeating-linear-gradient(90deg, rgba(38, 42, 45, 0.75) 0 34px, transparent 34px 44px);
+  background: repeating-linear-gradient(90deg, rgba(18, 18, 20, 0.7) 0 34px, transparent 34px 44px);
   transform: skewX(-18deg);
 }
 
@@ -705,9 +705,9 @@ export default defineComponent({
   width: 210px;
   height: 42px;
   content: "";
-  border: 1px solid rgba(39, 47, 52, 0.2);
-  border-radius: 22px 8px 8px 22px;
-  background: linear-gradient(90deg, rgba(65, 151, 169, 0.24), rgba(96, 145, 118, 0.18));
+  border: 1px solid var(--line-strong);
+  border-radius: 18px 6px 6px 18px;
+  background: linear-gradient(90deg, rgba(18, 18, 20, 0.18), rgba(18, 18, 20, 0.06));
   clip-path: polygon(0 50%, 12% 0, 100% 0, 100% 100%, 12% 100%);
 }
 
@@ -784,10 +784,10 @@ export default defineComponent({
   display: grid;
   width: 42px;
   height: 42px;
-  border-radius: 14px 7px 14px 7px;
+  border-radius: var(--radius-md) var(--radius-sm) var(--radius-md) var(--radius-sm);
   color: #fff;
   font-weight: 900;
-  background: linear-gradient(135deg, #202326, #397f91);
+  background: linear-gradient(135deg, #2b2c2e, #0c0d0e);
   place-items: center;
 }
 
@@ -877,7 +877,7 @@ export default defineComponent({
   width: 150px;
   height: 150px;
   content: "";
-  border: 1px solid rgba(65, 151, 169, 0.18);
+  border: 1px solid var(--line);
   transform: rotate(18deg);
 }
 
@@ -925,11 +925,11 @@ export default defineComponent({
   display: grid;
   width: 36px;
   height: 36px;
-  border: 1px solid rgba(66, 151, 169, 0.26);
+  border: 1px solid var(--line-strong);
   border-radius: 50%;
-  color: var(--primary);
+  color: var(--text);
   font-weight: 900;
-  background: rgba(66, 151, 169, 0.08);
+  background: var(--primary-soft);
   place-items: center;
 }
 
@@ -977,8 +977,8 @@ export default defineComponent({
 
 .carriage-unit__nose {
   background:
-      linear-gradient(135deg, transparent 0 46%, rgba(33, 37, 40, 0.94) 47% 53%, transparent 54%),
-      linear-gradient(180deg, #3b8997, #77a987);
+      linear-gradient(135deg, transparent 0 46%, rgba(18, 18, 20, 0.94) 47% 53%, transparent 54%),
+      linear-gradient(180deg, #3a3b3d, #131416);
 }
 
 .carriage-unit__content {

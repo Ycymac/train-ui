@@ -134,7 +134,7 @@ h2 {
   height: 10px;
   border-radius: 50%;
   background: var(--success);
-  box-shadow: 0 0 0 5px rgba(49, 193, 139, 0.13);
+  box-shadow: 0 0 0 5px rgba(18, 18, 20, 0.13);
   animation: status-pulse 2.4s ease-in-out infinite;
 }
 
@@ -249,7 +249,7 @@ h2 {
 
 @keyframes status-pulse {
   50% {
-    box-shadow: 0 0 0 8px rgba(49, 193, 139, 0.04);
+    box-shadow: 0 0 0 8px rgba(18, 18, 20, 0.04);
   }
 }
 
