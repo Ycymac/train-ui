@@ -10,7 +10,10 @@
         <div class="member-ticket-card__head">
           <div class="member-ticket-card__who">
             <strong>{{ record.passengerName || '—' }}</strong>
-            <small>会员 #{{ record.memberId }} · 乘客 #{{ record.passengerId }}</small>
+            <span class="who-meta">
+              <span class="who-meta__row"><em>会员</em><b>#{{ record.memberId }}</b></span>
+              <span class="who-meta__row"><em>乘客</em><b>#{{ record.passengerId }}</b></span>
+            </span>
           </div>
           <span class="ticket-tag ticket-tag--seat" :class="'seat-type--' + record.seatType">
             {{ seatTypeName(record.seatType) }}
@@ -167,16 +170,43 @@
 
 .member-ticket-card__who strong {
   display: block;
+  margin-bottom: 6px;
   color: var(--text);
   font-family: var(--display-font);
   font-size: 16px;
   font-weight: 700;
 }
 
-.member-ticket-card__who small {
-  color: var(--text-faint);
+.who-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.who-meta__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--mono-font);
   font-size: 11px;
+}
+
+.who-meta__row em {
+  display: inline-flex;
+  min-width: 30px;
+  padding: 1px 6px;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--text-soft);
+  background: var(--primary-soft);
+  font-style: normal;
+  font-family: var(--body-font);
+  font-weight: 600;
+}
+
+.who-meta__row b {
+  color: var(--text-faint);
+  font-weight: 700;
 }
 
 .ticket-tag {
