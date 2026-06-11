@@ -5,6 +5,10 @@
 
     </a-space>
   </p>
+  <div class="confirm-order-tip">
+    <info-circle-outlined class="confirm-order-tip__icon" />
+    <span>注意：此处车票为下单时的<strong>选座偏好</strong>（如 C1、A1），并非最终出票的物理排号；当前未显示对应排号，真实排号请前往「会员车票」查看。</span>
+  </div>
   <a-table :dataSource="confirmOrders"
            :columns="columns"
            :pagination="pagination"
@@ -26,7 +30,7 @@
               <span class="ticket-tag ticket-tag--seat" :class="'seat-type--' + t.seatTypeCode">
                 {{ seatTypeName(t.seatTypeCode) }}
               </span>
-              <span v-if="t.seat" class="ticket-seat">{{ t.seat }}</span>
+              <span v-if="t.seat" class="ticket-seat" title="选座偏好">{{ t.seat }}</span>
               <span v-else class="ticket-seat ticket-seat--none">未选座</span>
             </div>
             <div class="ticket-card__id" v-if="t.passengerIdCard">{{ t.passengerIdCard }}</div>
@@ -201,6 +205,34 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/* ---- 顶部提示 banner ---- */
+.confirm-order-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--line-strong);
+  border-left: 3px solid var(--warning);
+  border-radius: var(--radius-md);
+  background: var(--surface-muted);
+  color: var(--text-soft);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.confirm-order-tip strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.confirm-order-tip__icon {
+  margin-top: 3px;
+  color: var(--warning);
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
 /* ---- 车票卡片 ---- */
 .ticket-cards {
   display: flex;
