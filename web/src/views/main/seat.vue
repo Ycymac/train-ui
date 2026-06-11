@@ -10,15 +10,15 @@
       <p class="seat-sell__meta">
         <span>{{ param.date }}</span>
         <span>{{ param.trainCode }}</span>
-        <span>{{ param.departure }} → {{ param.destination }}</span>
+        <span>{{ param.start }} → {{ param.end }}</span>
       </p>
     </div>
 
     <div class="seat-legend">
       <span class="legend-chip legend-chip--sold"></span>
-      <span class="legend-text">已被购买</span>
+      <span class="legend-text">区间内已售</span>
       <span class="legend-chip legend-chip--free"></span>
-      <span class="legend-text">未被购买</span>
+      <span class="legend-text">区间内可售</span>
     </div>
 
     <div v-for="(seatObj, carriage) in train" :key="carriage" class="carriage-card">
@@ -110,7 +110,11 @@ export default defineComponent({
         // let end = 3;
         // let sell = sellDB.substr(start, end - start)
         // console.log(sell)
-        let sell = sellDB.substr(param.value.departureIndex, param.value.arrivalIndex - param.value.departureIndex);
+        // 截取当前区间的销售信息：从出发站序到到达站序
+        // 注意：query 里传的是 startIndex / endIndex（与 ticket.vue 的跳转参数一致）
+        let startIndex = parseInt(param.value.startIndex);
+        let endIndex = parseInt(param.value.endIndex);
+        let sell = sellDB.substr(startIndex, endIndex - startIndex);
         // console.log("完整的销卖信息：", sellDB, "区间内的销卖信息", sell);
 
         // 将sell放入火车数据中
