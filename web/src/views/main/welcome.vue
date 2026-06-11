@@ -46,11 +46,6 @@
           <span><strong>我的车票</strong><small>集中查看已成功出票的车票记录，快速确认行程信息。</small></span>
           <arrow-up-right-outlined />
         </router-link>
-        <router-link class="feature-line" to="/seat">
-          <span class="feature-line__index">04</span>
-          <span><strong>座位销售图</strong><small>按车次查看座位售卖情况，直观了解车厢内的余量分布。</small></span>
-          <arrow-up-right-outlined />
-        </router-link>
       </div>
     </section>
 

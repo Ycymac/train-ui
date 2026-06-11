@@ -12,7 +12,6 @@
       <router-link class="header-nav__link" to="/ticket">余票查询</router-link>
       <router-link class="header-nav__link" to="/passenger">乘车人</router-link>
       <router-link class="header-nav__link" to="/my-ticket">我的车票</router-link>
-      <router-link class="header-nav__link" to="/seat">座位销售图</router-link>
     </nav>
 
     <div class="header-actions">

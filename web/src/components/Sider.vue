@@ -16,9 +16,6 @@
           <a-menu-item key="/my-ticket">
             <router-link to="/my-ticket"><idcard-outlined /> 我的车票</router-link>
           </a-menu-item>
-          <a-menu-item key="/seat">
-            <router-link to="/seat"><apartment-outlined /> 座位销售图</router-link>
-          </a-menu-item>
           <a-menu-item key="/admin">
             <router-link to="/admin"><info-circle-outlined /> 管理台说明</router-link>
           </a-menu-item>
