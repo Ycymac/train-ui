@@ -32,7 +32,7 @@
         <div class="member-ticket-card__foot">
           <span class="seat-chip">
             <span class="seat-chip__seg">{{ pad2(record.carriageIndex) }}车</span>
-            <span class="seat-chip__seg">{{ record.seatRow || '--' }}排</span>
+            <span class="seat-chip__seg">{{ record.row || '--' }}排</span>
             <span class="seat-chip__seg seat-chip__seg--col">{{ colName(record) }}</span>
           </span>
           <span class="member-ticket-card__date">{{ formatDate(record.date) }}</span>
