@@ -7,16 +7,11 @@
   <a-spin :spinning="loading">
     <div v-if="tickets.length" class="ticket-grid">
       <article v-for="record in tickets" :key="record.id" class="member-ticket-card">
-        <div class="member-ticket-card__head">
-          <div class="member-ticket-card__who">
-            <strong>{{ record.passengerName || '—' }}</strong>
-            <span class="who-meta">
-              <span class="who-meta__row"><em>会员</em><b>#{{ record.memberId }}</b></span>
-              <span class="who-meta__row"><em>乘客</em><b>#{{ record.passengerId }}</b></span>
-            </span>
-          </div>
-          <span class="ticket-tag ticket-tag--seat" :class="'seat-type--' + record.seatType">
-            {{ seatTypeName(record.seatType) }}
+        <div class="member-ticket-card__who">
+          <strong>{{ record.passengerName || '—' }}</strong>
+          <span class="who-meta">
+            <span class="who-meta__row"><em>会员</em><b>#{{ record.memberId }}</b></span>
+            <span class="who-meta__row"><em>乘客</em><b>#{{ record.passengerId }}</b></span>
           </span>
         </div>
 
@@ -32,7 +27,10 @@
           </div>
         </div>
 
-        <div class="member-ticket-card__foot">
+        <div class="member-ticket-card__aside">
+          <span class="ticket-tag ticket-tag--seat" :class="'seat-type--' + record.seatType">
+            {{ seatTypeName(record.seatType) }}
+          </span>
           <span class="seat-chip">
             <span class="seat-chip__seg">{{ pad2(record.carriageIndex) }}车</span>
             <span class="seat-chip__seg">{{ record.row || '--' }}排</span>
@@ -146,26 +144,26 @@
 <style scoped>
 .ticket-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: 1fr;
   gap: 14px;
 }
 
 .member-ticket-card {
   display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 16px 18px;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 22px;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: linear-gradient(145deg, var(--surface-strong), var(--surface-muted));
   box-shadow: var(--shadow-soft);
 }
 
-.member-ticket-card__head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
+.member-ticket-card__who {
+  flex-shrink: 0;
+  width: 200px;
+  padding-right: 24px;
+  border-right: 1px dashed var(--line);
 }
 
 .member-ticket-card__who strong {
@@ -226,6 +224,8 @@
 
 .member-ticket-card__route {
   display: grid;
+  flex: 1;
+  min-width: 0;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 12px;
@@ -260,7 +260,7 @@
 }
 
 .route-line i {
-  width: 20px;
+  width: 40px;
   height: 2px;
   background: linear-gradient(90deg, var(--text-faint), var(--text));
 }
@@ -272,13 +272,14 @@
   white-space: nowrap;
 }
 
-.member-ticket-card__foot {
+.member-ticket-card__aside {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding-top: 12px;
-  border-top: 1px dashed var(--line);
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  padding-left: 24px;
+  border-left: 1px dashed var(--line);
 }
 
 .seat-chip {
@@ -323,4 +324,30 @@
 :root[data-theme='dark'] .seat-type--2 { color: #8ea9e8; }
 :root[data-theme='dark'] .seat-type--3 { color: #b699e0; }
 :root[data-theme='dark'] .seat-type--4 { color: #7ec79a; }
+
+@media (max-width: 860px) {
+  .member-ticket-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .member-ticket-card__who {
+    width: auto;
+    padding-right: 0;
+    padding-bottom: 14px;
+    border-right: 0;
+    border-bottom: 1px dashed var(--line);
+  }
+
+  .member-ticket-card__aside {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 0;
+    padding-top: 14px;
+    border-left: 0;
+    border-top: 1px dashed var(--line);
+  }
+}
 </style>
